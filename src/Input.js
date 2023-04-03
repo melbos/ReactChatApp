@@ -1,39 +1,31 @@
-import { Component } from "react";
-import React from "react";
+import React, { useState } from "react";
 
-class Input extends Component {
-  state = {
-    text: "",
+const Input = ({ onSendMessage }) => {
+  const [text, setText] = useState("");
+  const onChange = (e) => {
+    setText(e.target.value);
+  };
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (text.trim() !== "") {
+      onSendMessage(text);
+    }
+    setText("");
   };
 
-  onChange(e) {
-    this.setState({ text: e.target.value });
-  }
-
-  onSubmit(e) {
-    e.preventDefault();
-    this.setState({ text: "" });
-    if (this.state.text !== " ") {
-      this.props.onSendMessage(this.state.text);
-    }
-  }
-
-  render() {
-    return (
-      <div className="Input">
-        <form onSubmit={(e) => this.onSubmit(e)}>
-          <input
-            onChange={(e) => this.onChange(e)}
-            value={this.state.text}
-            type="text"
-            placeholder="Upiši poruku i pritisni ENTER"
-            autoFocus={true}
-          />
-          <button>Pošalji</button>
-        </form>
-      </div>
-    );
-  }
-}
-
+  return (
+    <div className="Input">
+      <form onSubmit={(e) => onSubmit(e)}>
+        <input
+          onChange={(e) => onChange(e)}
+          value={text}
+          type="text"
+          placeholder="Upiši poruku i pritisni ENTER"
+          autoFocus={true}
+        />
+        <button>Pošalji</button>
+      </form>
+    </div>
+  );
+};
 export default Input;
