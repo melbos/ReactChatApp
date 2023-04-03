@@ -2,11 +2,8 @@ import React, { Component } from "react";
 import "./App.css";
 import Messages from "./Messages";
 import Input from "./Input";
-import randomName from "./RandomUser";
-
-function randomColor() {
-  return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
-}
+import randomName from "./components/RandomUser";
+import randomColor from "./components/RandomColor";
 
 class App extends Component {
   state = {
