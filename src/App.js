@@ -1,61 +1,58 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import Messages from "./Messages";
-import Input from "./Input";
-import randomName from "./components/RandomUser";
-import randomColor from "./components/RandomColor";
+import Messages from "./components/Messages";
+import Input from "./components/Input";
+import randomName from "./helpers/RandomUser";
+import randomColor from "./helpers/RandomColor";
 
-class App extends Component {
-  state = {
-    messages: [],
-    member: {
-      username: randomName(),
-      color: randomColor(),
-    },
-  };
+const App = () => {
+  const [messages, setMessages] = useState([]);
+  const [member, setMember] = useState({
+    username: randomName(),
+    color: randomColor(),
+  });
 
-  constructor() {
-    super();
-    this.drone = new window.Scaledrone("NMfBD5CvH8KY6q23", {
-      data: this.state.member,
+  const [drone, setDrone] = useState();
+
+  useEffect(() => {
+    const drone = new window.Scaledrone(process.env.REACT_APP_CHANNEL_ID, {
+      data: member,
     });
-    this.drone.on("open", (error) => {
-      if (error) {
-        return console.error(error);
-      }
-      const member = { ...this.state.member };
-      member.id = this.drone.clientId;
-      this.setState({ member });
-    });
-    const room = this.drone.subscribe("observable-room");
-    room.on("data", (data, member) => {
-      const messages = this.state.messages;
-      messages.push({ member, text: data });
-      this.setState({ messages });
-    });
-  }
+    setDrone(drone);
+  }, [member]);
 
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <h1>React Chat @ Algebra</h1>
-        </div>
-        <Messages
-          messages={this.state.messages}
-          currentMember={this.state.member}
-        />
-        <Input onSendMessage={this.onSendMessage} />
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (drone) {
+      drone.on("open", (error) => {
+        if (error) {
+          return console.error(error);
+        }
+        member.id = drone.clientId;
+        console.log("Successfully connected to Scaledrone");
+        setMember(member);
+      });
+      const room = drone.subscribe("observable-room");
+      room.on("data", (data, member) => {
+        setMessages((prevArray) => [...prevArray, { member, text: data }]);
+      });
+    }
+  }, [drone, member]);
 
-  onSendMessage = (message) => {
-    this.drone.publish({
+  const onSendMessage = (message) => {
+    drone.publish({
       room: "observable-room",
       message,
     });
   };
-}
 
+  return (
+    <div className="App">
+      <div className="App-header">
+        <h1>React Chat @ Algebra</h1>
+      </div>
+      <Messages messages={messages} currentMember={member} />
+      <Input onSendMessage={onSendMessage} />
+    </div>
+  );
+};
 export default App;
