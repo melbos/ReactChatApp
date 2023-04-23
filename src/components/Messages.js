@@ -1,5 +1,3 @@
-import React from "react";
-
 const Messages = ({ messages, currentMember }) => {
   const renderMessage = (message, index) => {
     const { member, text } = message;
