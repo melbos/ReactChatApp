@@ -49,7 +49,7 @@ function registerValidSW(swUrl, config) {
       };
     })
     .catch((error) => {
-      console.error("Greška prilikom registracije SW:", error);
+      alert("Greška prilikom registracije SW:", error);
     });
 }
 
@@ -70,7 +70,7 @@ function checkValidServiceWorker(swUrl, config) {
       }
     })
     .catch(() => {
-      console.log("Nema internet veze. App je u offline modu.");
+      alert("Nema internet veze. App je u offline modu.");
     });
 }
 

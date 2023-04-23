@@ -43,9 +43,7 @@ const Input = ({ onSendMessage }) => {
         <button>Pošalji</button>
       </form>
 
-      {error && (
-        <div className="error">Poruka može sadržavati 160 znakova!</div>
-      )}
+      {error && alert("Poruka ne smije preći 160 znakova!")}
     </div>
   );
 };
