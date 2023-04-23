@@ -36,7 +36,7 @@ const Input = ({ onSendMessage }) => {
           onChange={(e) => onChange(e)}
           value={text}
           type="text"
-          placeholder="Upiši poruku i pritisni ENTER"
+          placeholder="Upiši poruku max duljine 160 znakova i pritisni ENTER"
           autoFocus={true}
           maxLength="160"
         />
